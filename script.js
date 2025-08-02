@@ -1,53 +1,48 @@
-
 const questions = [
   {
-    question: "Which of the following is a tributary of the Narmada River?",
-    options: ["Tapi", "Mahi", "Tawa", "Sabarmati"],
-    answer: "Tawa"
+    question: "Which of the following is a non-renewable resource?",
+    options: ["Solar", "Wind", "Petroleum", "Hydro"],
+    answer: 2
   },
   {
-    question: "In which year was the first GPSC exam held?",
-    options: ["1960", "1965", "1972", "1980"],
-    answer: "1960"
+    question: "The unit of electric current is?",
+    options: ["Volt", "Ampere", "Ohm", "Watt"],
+    answer: 1
   }
 ];
 
-let current = 0;
+let currentQuestion = 0;
 
-function displayQuestion() {
-  const container = document.getElementById('question-container');
-  const q = questions[current];
-  container.innerHTML = \`
-    <h2>Q${current + 1}: ${q.question}</h2>
-    <ul>
-      \${q.options.map(opt => `<li><label><input type="radio" name="opt" value="\${opt}"> \${opt}</label></li>`).join('')}
-    </ul>
-  \`;
-  document.getElementById('result').innerText = "";
+function loadQuestion() {
+  const q = questions[currentQuestion];
+  document.getElementById("question").innerText = q.question;
+  const optionsDiv = document.getElementById("options");
+  optionsDiv.innerHTML = "";
+  q.options.forEach((opt, idx) => {
+    const btn = document.createElement("button");
+    btn.innerText = opt;
+    btn.onclick = () => checkAnswer(idx);
+    optionsDiv.appendChild(btn);
+  });
+}
+
+function checkAnswer(selected) {
+  const correct = questions[currentQuestion].answer;
+  if (selected === correct) {
+    alert("Correct!");
+  } else {
+    alert("Wrong answer!");
+  }
 }
 
 function nextQuestion() {
-  if (current < questions.length - 1) {
-    current++;
-    displayQuestion();
-  }
+  currentQuestion = (currentQuestion + 1) % questions.length;
+  loadQuestion();
 }
 
 function prevQuestion() {
-  if (current > 0) {
-    current--;
-    displayQuestion();
-  }
+  currentQuestion = (currentQuestion - 1 + questions.length) % questions.length;
+  loadQuestion();
 }
 
-function checkAnswer() {
-  const selected = document.querySelector('input[name="opt"]:checked');
-  const result = document.getElementById('result');
-  if (!selected) {
-    result.innerText = "Please select an answer.";
-    return;
-  }
-  result.innerText = selected.value === questions[current].answer ? "✅ Correct!" : "❌ Wrong. Correct answer: " + questions[current].answer;
-}
-
-window.onload = displayQuestion;
+window.onload = loadQuestion;
