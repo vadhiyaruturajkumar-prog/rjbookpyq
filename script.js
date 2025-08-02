@@ -46,4 +46,3 @@ function prevQuestion() {
 }
 
 window.onload = loadQuestion;
-    
